@@ -24,7 +24,7 @@ class RegisterScreen extends StatelessWidget {
     return BlocConsumer<SocialRegisterCubit, SocialRegisterStates>(
       listener: (context, state) {
         if (state is SocialCreateSuccessState) {
-          pushAndTerminate(context: context, route: HomeLayOut());
+          pushAndTerminate(context: context, route: LogInScreen());
         }
       },
       builder: (context, state) {
