@@ -15,6 +15,10 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    Future<void> refresh() async {
+      SocialCubit.getCubit(context).getPosts();
+      return Future.delayed(Duration(seconds: 1));
+    }
 
     // SocialCubit.getCubit(context).userGetData();
 
@@ -26,201 +30,209 @@ class SettingScreen extends StatelessWidget {
         return BuildCondition(
           condition: userModel != null,
           builder: (context) {
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: size.height * 0.27,
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional.topStart,
-                          child: Container(
-                            width: double.infinity,
-                            height: size.height * 0.2,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
+            return RefreshIndicator(
+              onRefresh: () {
+                return refresh();
+              },
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: size.height * 0.27,
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: Container(
+                              width: double.infinity,
+                              height: size.height * 0.2,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
+                                ),
+                              ),
+                              child: Image(
+                                image:
+                                    NetworkImage(userModel!.cover.toString()),
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
                               ),
                             ),
-                            child: Image(
-                              image: NetworkImage(userModel!.cover.toString()),
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
+                          ),
+                          CircleAvatar(
+                            radius: 64,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              radius: 60,
+                              // backgroundColor: Colors.amber,
+                              backgroundImage:
+                                  NetworkImage(userModel.image.toString()),
                             ),
                           ),
-                        ),
-                        CircleAvatar(
-                          radius: 64,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 60,
-                            // backgroundColor: Colors.amber,
-                            backgroundImage:
-                                NetworkImage(userModel.image.toString()),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    userModel.name.toString(),
-                    style: kMyTitle1,
-                  ),
-                  Text(
-                    userModel.bio.toString(),
-                    style: kMySubTitle2,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
+                    SizedBox(
+                      height: 5,
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${SocialCubit.getCubit(context).myPosts.length}',
-                                  style: kMySubTitle2,
-                                ),
-                                Text(
-                                  'Posts',
-                                  style: kMySubTitle1,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: [
-                                Text(
-                                  '100',
-                                  style: kMySubTitle2,
-                                ),
-                                Text(
-                                  'Photos',
-                                  style: kMySubTitle1,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: [
-                                Text(
-                                  '10K',
-                                  style: kMySubTitle2,
-                                ),
-                                Text(
-                                  'Follower',
-                                  style: kMySubTitle1,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: [
-                                Text(
-                                  '43',
-                                  style: kMySubTitle2,
-                                ),
-                                Text(
-                                  'Following',
-                                  style: kMySubTitle1,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      userModel.name.toString(),
+                      style: kMyTitle1,
                     ),
-                  ),
-                  Padding(
+                    Text(
+                      userModel.bio.toString(),
+                      style: kMySubTitle2,
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(
                         top: 8.0,
-                        left: 8.0,
-                        right: 8.0,
                       ),
                       child: Row(
                         children: [
                           Expanded(
-                            child: OutlinedButton(
-                              child: Text(
-                                'ADD POST  ',
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${SocialCubit.getCubit(context).myPosts.length}',
+                                    style: kMySubTitle2,
+                                  ),
+                                  Text(
+                                    'Posts',
+                                    style: kMySubTitle1,
+                                  ),
+                                ],
                               ),
-                              onPressed: () {
-                                pushOnly(
-                                    context: context, route: NewPostScreen());
-                              },
                             ),
                           ),
-                          SizedBox(
-                            width: size.width * 0.015,
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '100',
+                                    style: kMySubTitle2,
+                                  ),
+                                  Text(
+                                    'Photos',
+                                    style: kMySubTitle1,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          OutlinedButton(
-                            onPressed: () {
-                              pushOnly(
-                                context: context,
-                                route: EditProfileScreen(),
-                              );
-                            },
-                            child: Icon(
-                              Icons.edit_outlined,
-                              size: 14,
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '10K',
+                                    style: kMySubTitle2,
+                                  ),
+                                  Text(
+                                    'Follower',
+                                    style: kMySubTitle1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '43',
+                                    style: kMySubTitle2,
+                                  ),
+                                  Text(
+                                    'Following',
+                                    style: kMySubTitle1,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
-                      )),
-                  BuildCondition(
-                    condition: SocialCubit.getCubit(context).myPosts.length > 0,
-                    builder: (context) {
-                      return ListView.separated(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => bulidMyPostItem(
-                          SocialCubit.getCubit(context).myPosts[index],
-                          context,
-                          index,
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8.0,
+                          left: 8.0,
+                          right: 8.0,
                         ),
-                        itemCount: SocialCubit.getCubit(context).myPosts.length,
-                        separatorBuilder: (context, index) => SizedBox(
-                          height: 8.0,
-                        ),
-                      );
-                    },
-                    fallback: (context) =>
-                        const Center(child: CircularProgressIndicator()),
-                  ),
-                  MyButton(
-                    text: ' SIGN OUT',
-                    color: kDefaultColor,
-                    press: () {
-                      signOut(context);
-                    },
-                  ),
-                ],
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                child: Text(
+                                  'ADD POST  ',
+                                ),
+                                onPressed: () {
+                                  pushOnly(
+                                      context: context, route: NewPostScreen());
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.015,
+                            ),
+                            OutlinedButton(
+                              onPressed: () {
+                                pushOnly(
+                                  context: context,
+                                  route: EditProfileScreen(),
+                                );
+                              },
+                              child: Icon(
+                                Icons.edit_outlined,
+                                size: 14,
+                              ),
+                            ),
+                          ],
+                        )),
+                    BuildCondition(
+                      condition:
+                          SocialCubit.getCubit(context).myPosts.isNotEmpty,
+                      builder: (context) {
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => bulidMyPostItem(
+                            SocialCubit.getCubit(context).myPosts[index],
+                            context,
+                            index,
+                          ),
+                          itemCount:
+                              SocialCubit.getCubit(context).myPosts.length,
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: 8.0,
+                          ),
+                        );
+                      },
+                      fallback: (context) =>
+                          const Center(child: CircularProgressIndicator()),
+                    ),
+                    MyButton(
+                      text: ' SIGN OUT',
+                      color: kDefaultColor,
+                      press: () {
+                        signOut(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           },

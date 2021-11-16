@@ -11,6 +11,11 @@ import 'package:social_app/Models/PostModel.dart';
 class FeedsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Future<void> refresh() async {
+      SocialCubit.getCubit(context).getPosts();
+      return Future.delayed(Duration(seconds: 1));
+    }
+
     var size = MediaQuery.of(context).size;
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {},
@@ -19,55 +24,60 @@ class FeedsScreen extends StatelessWidget {
           condition: SocialCubit.getCubit(context).posts.isNotEmpty &&
               SocialCubit.getCubit(context).model != null,
           builder: (context) {
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  Card(
-                    margin: const EdgeInsets.all(5.0),
-                    elevation: 5.0,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Stack(
-                      alignment: AlignmentDirectional.centerEnd,
-                      children: [
-                        Image(
-                          image: const NetworkImage(
-                            'https://image.freepik.com/free-photo/indignant-puzzled-redhead-woman-raises-palm-thinks-what-answer-received-message-holds-mobile-phone-wears-round-spectacles-hoodie-models-yellow-wall-with-blank-space-right_273609-42106.jpg',
+            return RefreshIndicator(
+              onRefresh: () {
+                return refresh();
+              },
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Card(
+                      margin: const EdgeInsets.all(5.0),
+                      elevation: 5.0,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Image(
+                            image: const NetworkImage(
+                              'https://image.freepik.com/free-photo/indignant-puzzled-redhead-woman-raises-palm-thinks-what-answer-received-message-holds-mobile-phone-wears-round-spectacles-hoodie-models-yellow-wall-with-blank-space-right_273609-42106.jpg',
+                            ),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: size.height * 0.3,
                           ),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: size.height * 0.3,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Communicate with your friends ',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Communicate with your friends ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => bulidPostItem(
-                      SocialCubit.getCubit(context).posts[index],
-                      context,
-                      index,
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => bulidPostItem(
+                        SocialCubit.getCubit(context).posts[index],
+                        context,
+                        index,
+                      ),
+                      itemCount: SocialCubit.getCubit(context).posts.length,
+                      separatorBuilder: (context, index) => SizedBox(
+                        height: 8.0,
+                      ),
                     ),
-                    itemCount: SocialCubit.getCubit(context).posts.length,
-                    separatorBuilder: (context, index) => SizedBox(
+                    SizedBox(
                       height: 8.0,
                     ),
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

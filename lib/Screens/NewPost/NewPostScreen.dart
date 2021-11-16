@@ -14,7 +14,11 @@ class NewPostScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is SocialCreatePostSucessState) {
           back(context);
+
           SocialCubit.getCubit(context).removePostImage();
+          SocialCubit.getCubit(context).getPosts();
+          SocialCubit.getCubit(context).getMyPosts();
+
           showToast(
             text: 'Post shared successfully',
             state: ToastStates.SUCESS,

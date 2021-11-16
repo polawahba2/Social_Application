@@ -12,6 +12,11 @@ import 'Cubit/Cubit/SocialCubit.dart';
 import 'Cubit/LogInCubit/LogInCubit.dart';
 import 'Cubit/RegisterCubit/RegisterCubit.dart';
 
+// Future<void> firebaseMessageingBackgroundHandler(RemoteMessage message) async {
+//   showToast(text: 'on background message', state: ToastStates.SUCESS);
+//   print(message.data.toString());
+// }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -29,6 +34,8 @@ void main() async {
   //   showToast(text: 'on message opened app', state: ToastStates.SUCESS);
   //   print(event.data.toString());
   // });
+
+  // FirebaseMessaging.onBackgroundMessage((firebaseMessageingBackgroundHandler));
 
   await CashHelper.init();
   uId = CashHelper.getDate(key: 'uId');

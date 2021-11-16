@@ -256,6 +256,9 @@ class SocialCubit extends Cubit<SocialStates> {
   List<int> likes = [];
 
   void getPosts() {
+    posts = [];
+    postId = [];
+    likes = [];
     FirebaseFirestore.instance
         .collection('posts')
         .orderBy('dataTime')
@@ -282,6 +285,9 @@ class SocialCubit extends Cubit<SocialStates> {
 
   void getMyPosts() {
     FirebaseFirestore.instance.collection('posts').get().then((value) {
+      myPosts = [];
+      myPostsId = [];
+      myPostsLikes = [];
       value.docs.forEach((element) {
         // print(element.id);
         if (element.data()['uId'] == model!.uId) {
