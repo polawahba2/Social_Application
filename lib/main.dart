@@ -51,7 +51,8 @@ void main() async {
       BlocProvider(
         create: (BuildContext context) => SocialCubit()
           ..userGetData()
-          ..getPosts(),
+          ..getPosts()
+          ..getMyPosts(),
       ),
     ],
     child: MaterialApp(

@@ -52,6 +52,10 @@ void signOut(context) {
   SocialCubit.getCubit(context).postId = [];
   SocialCubit.getCubit(context).likes = [];
 
+  SocialCubit.getCubit(context).myPosts = [];
+  SocialCubit.getCubit(context).myPostsId = [];
+  SocialCubit.getCubit(context).myPostsLikes = [];
+
   SocialCubit.getCubit(context).allUsers = [];
   SocialCubit.getCubit(context).model = null;
   pushAndTerminate(context: context, route: LogInScreen());

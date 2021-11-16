@@ -36,6 +36,7 @@ class LogInScreen extends StatelessWidget {
           SocialCubit.getCubit(context).userGetData();
           SocialCubit.getCubit(context).getAllUsers();
           SocialCubit.getCubit(context).getPosts();
+          SocialCubit.getCubit(context).getMyPosts();
 
           pushAndTerminate(context: context, route: HomeLayOut());
         }
