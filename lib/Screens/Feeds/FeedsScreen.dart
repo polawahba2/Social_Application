@@ -17,6 +17,7 @@ class FeedsScreen extends StatelessWidget {
     }
 
     var size = MediaQuery.of(context).size;
+
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -89,6 +90,7 @@ class FeedsScreen extends StatelessWidget {
 }
 
 Widget bulidPostItem(PostModel model, context, index) {
+  var myCubit = SocialCubit.getCubit(context);
   var size = MediaQuery.of(context).size;
   return Card(
     margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -243,7 +245,7 @@ Widget bulidPostItem(PostModel model, context, index) {
                       child: Row(
                         children: [
                           Icon(
-                            MdiIcons.heartOutline,
+                            MdiIcons.heart,
                             color: Colors.red,
                             size: 16.0,
                           ),
@@ -329,8 +331,13 @@ Widget bulidPostItem(PostModel model, context, index) {
                       ],
                     ),
                     onTap: () {
-                      // SocialCubit.getCubit(context).getUsersWhoLike(
-                      //     SocialCubit.getCubit(context).postId[index]);
+                      // myCubit.likeOrUnlike(myCubit.postId[index]);
+                      // print(myCubit.isExist);
+                      // await myCubit.likeOrNot(myCubit.postId[index]);
+
+                      // print('${myCubit.isExist} printed at feed screen');
+                      // print(
+                      //     '${myCubit.likeOrUnlike(myCubit.postId[index])} printed at feed screen');
                     },
                   ),
                 ),
@@ -353,9 +360,16 @@ Widget bulidPostItem(PostModel model, context, index) {
                         ),
                       ],
                     ),
-                    onTap: () {
-                      SocialCubit.getCubit(context).likePost(
-                          SocialCubit.getCubit(context).postId[index]);
+                    onTap: () async {
+                      await myCubit.likeOrNot(myCubit.postId[index]);
+                      print('${myCubit.isExist} printed at on tap');
+                      if (myCubit.isExist) {
+                        myCubit.unLikePost(myCubit.postId[index]);
+                        myCubit.changeLikesNumbers(index, false);
+                      } else {
+                        myCubit.likePost(myCubit.postId[index]);
+                        myCubit.changeLikesNumbers(index, true);
+                      }
                     },
                   ),
                 ),

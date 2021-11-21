@@ -16,7 +16,6 @@ import 'package:social_app/Screens/Chats/ChatScreen.dart';
 import 'package:social_app/Screens/Feeds/FeedsScreen.dart';
 import 'package:social_app/Screens/NewPost/NewPostScreen.dart';
 import 'package:social_app/Screens/Settings/SettingsScreen.dart';
-import 'package:social_app/Screens/Users/UsersScreen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class SocialCubit extends Cubit<SocialStates> {
@@ -323,13 +322,87 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('posts')
         .doc(postId)
         .collection('likes')
-        .doc(model!.uId)
-        .delete()
+        .get()
         .then((value) {
+      value.docs.forEach((element) {
+        if (element.id == model!.uId) {
+          element.reference.delete();
+        }
+      });
       emit(SocialUnLikePostSuccessState());
     }).catchError((error) {
       emit(SocialUnLikePostErrorState(error.toString()));
     });
+  }
+
+  // bool isExist = false;
+  // void likeOrUnlike(String postId) {
+  //   print('1');
+  //   Duration(seconds: 15);
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .doc(postId)
+  //       .collection('likes')
+  //       .get()
+  //       .then((value) {
+  //     // print(model!.uId);
+  //     for (var element in value.docs) {
+  //       print('2');
+  //       print(element.id);
+  //       print(model!.uId);
+  //       if (element.id == model!.uId) {
+  //         isExist = true;
+  //         break;
+  //       } else {
+  //         isExist = false;
+  //       }
+  //     }
+  //     print('3');
+  //     // print('$isExist after the condition ');
+  //   });
+
+  //   // print(isExist);
+  //   print('4');
+  //   // print('$isExist before the return line of the function ');
+  // }
+
+  late bool isExist;
+  Future<void> likeOrNot(String postId) async {
+    print('1');
+
+    final snapShot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .get();
+    if (snapShot.docs.isNotEmpty) {
+      print('2');
+
+      for (var element in snapShot.docs) {
+        if (element.id == model!.uId) {
+          isExist = true;
+          break;
+        } else {
+          isExist = false;
+        }
+      }
+    } else {
+      isExist = false;
+    }
+    print('3');
+
+    print(isExist);
+    // print('4');
+  }
+
+  void changeLikesNumbers(var index, bool state) {
+    if (state) {
+      likes[index] += 1;
+      emit(SocialIncreaseLikeNumberSuccessState());
+    } else {
+      likes[index] -= 1;
+      emit(SocialDecreaseLikeNumberSuccessState());
+    }
   }
 
   List<UserModel> allUsers = [];
@@ -345,23 +418,6 @@ class SocialCubit extends Cubit<SocialStates> {
         emit(SocialGetAllUsersErrorState(error.toString()));
       });
   }
-
-  // List UsersWhoLike = [];
-  // void getUsersWhoLike(String postId) {
-  //   FirebaseFirestore.instance
-  //       .collection('posts')
-  //       .doc(postId)
-  //       .get()
-  //       .then((value) {
-  //     // value.docs.forEach((element) {
-  //     //   UsersWhoLike.add(element.data());
-  //     // });
-
-  //     // print(UsersWhoLike);
-  //     emit(SocialgetUsersWhoLikeSuccessState());
-  //     // print(UsersWhoLike);
-  //   });
-  // }
 
   void sendMessage({
     required reciverId,

@@ -99,7 +99,7 @@ class NewPostScreen extends StatelessWidget {
                           width: 15.0,
                         ),
                         Text(
-                          'Pola Wahba ',
+                          '${SocialCubit.getCubit(context).model!.name}',
                           style: kMySubTitle1,
                         ),
                       ],

@@ -202,27 +202,18 @@ class SettingScreen extends StatelessWidget {
                             ),
                           ],
                         )),
-                    BuildCondition(
-                      condition:
-                          SocialCubit.getCubit(context).myPosts.isNotEmpty,
-                      builder: (context) {
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => bulidMyPostItem(
-                            SocialCubit.getCubit(context).myPosts[index],
-                            context,
-                            index,
-                          ),
-                          itemCount:
-                              SocialCubit.getCubit(context).myPosts.length,
-                          separatorBuilder: (context, index) => SizedBox(
-                            height: 8.0,
-                          ),
-                        );
-                      },
-                      fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => bulidMyPostItem(
+                        SocialCubit.getCubit(context).myPosts[index],
+                        context,
+                        index,
+                      ),
+                      itemCount: SocialCubit.getCubit(context).myPosts.length,
+                      separatorBuilder: (context, index) => SizedBox(
+                        height: 8.0,
+                      ),
                     ),
                     MyButton(
                       text: ' SIGN OUT',

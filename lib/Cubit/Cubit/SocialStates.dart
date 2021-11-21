@@ -106,6 +106,10 @@ class SocialUnLikePostErrorState extends SocialStates {
   SocialUnLikePostErrorState(this.error);
 }
 
+class SocialIncreaseLikeNumberSuccessState extends SocialStates {}
+
+class SocialDecreaseLikeNumberSuccessState extends SocialStates {}
+
 //get users
 class SocialgetUsersWhoLikeSuccessState extends SocialStates {}
 
